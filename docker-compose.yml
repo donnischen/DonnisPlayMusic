@@ -1,0 +1,9 @@
+services:
+  DonnisPlayMusic:
+    build:
+      context: .
+    image: donnisplaymusic
+    container_name: DonnisPlayMusic
+    ports:
+      - 80:80
+    restart: always
