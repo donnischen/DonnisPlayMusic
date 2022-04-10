@@ -24,6 +24,7 @@
 - ✔️ 每日自动签到（手机端和电脑端同时签到）
 - 🟥 支持 Last.fm Scrobble
 - 🌚 Light/Dark Mode 自动切换
+- 👆 支持 Touch Bar
 - ☁️ 支持音乐云盘
 - ⌨️ 自定义快捷键和全局快捷键
 
