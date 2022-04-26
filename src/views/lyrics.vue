@@ -730,12 +730,10 @@ export default {
     .highlight span {
       opacity: 0.98;
       display: inline-block;
-      font-size: 1.25em;
     }
 
     .highlight span.translation {
       opacity: 0.65;
-      font-size: 1.1em;
     }
   }
 
