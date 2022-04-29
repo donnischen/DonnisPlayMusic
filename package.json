@@ -23,7 +23,7 @@
   },
   "main": "background.js",
   "dependencies": {
-    "@unblockneteasemusic/server": "v0.27.0-rc.6",
+    "@unblockneteasemusic/rust-napi": "^0.3.0-pre.1",
     "NeteaseCloudMusicApi": "^4.5.2",
     "axios": "^0.26.1",
     "change-case": "^4.1.2",
@@ -66,8 +66,8 @@
     "tunnel": "^0.0.6",
     "vscode-codicons": "^0.0.17",
     "vue": "^2.6.11",
-    "vue-gtag": "1",
     "vue-clipboard2": "^0.3.1",
+    "vue-gtag": "1",
     "vue-i18n": "^8.22.0",
     "vue-router": "^3.4.3",
     "vue-slider-component": "^3.2.5",
