@@ -246,6 +246,7 @@
             </div>
           </div>
         </div>
+
         <div class="item">
           <div class="left">
             <div class="title"> 备选音源 </div>
@@ -296,23 +297,6 @@
               <option value="fast-first"> 速度优先，不论顺序 </option>
               <option value="order-first"> 顺序优先，不论速度 </option>
             </select>
-          </div>
-        </div>
-
-        <div class="item">
-          <div class="left">
-            <div class="title"> 请求用代理服务器 (Proxy) </div>
-            <div class="description">
-              请求如 YouTube 音源服务时要使用的代理服务器。<br />
-              留空则不进行相关设置。
-            </div>
-          </div>
-          <div class="right">
-            <input
-              v-model="unmProxyUri"
-              class="text-input margin-right-0"
-              placeholder="例 https://192.168.11.45"
-            />
           </div>
         </div>
 
@@ -414,7 +398,7 @@
           <button v-else @click="lastfmConnect()"> 授权连接 </button>
         </div>
       </div>
-      
+
       <h3>其他</h3>
       <div v-if="isElectron && !isMac" class="item">
         <div class="left">
