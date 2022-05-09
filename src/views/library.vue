@@ -201,7 +201,7 @@
       }}</div>
     </ContextMenu>
 
-   <ContextMenu ref="playModeTabMenu">
+    <ContextMenu ref="playModeTabMenu">
       <div class="item" @click="playLikedSongs">{{
         $t('library.likedSongs')
       }}</div>
