@@ -1,16 +1,15 @@
+import { getTrackDetail, scrobble, getMP3 } from '@/api/track';
+import shuffle from 'lodash/shuffle';
+import { Howler, Howl } from 'howler';
+import { cacheTrackSource, getTrackSource } from '@/utils/db';
 import { getAlbum } from '@/api/album';
-import { getArtist } from '@/api/artist';
-import { trackScrobble, trackUpdateNowPlaying } from '@/api/lastfm';
-import { fmTrash, personalFM } from '@/api/others';
 import { getPlaylistDetail, intelligencePlaylist } from '@/api/playlist';
-import { getMP3, getTrackDetail, scrobble } from '@/api/track';
+import { getArtist } from '@/api/artist';
+import { personalFM, fmTrash } from '@/api/others';
 import store from '@/store';
 import { isAccountLoggedIn } from '@/utils/auth';
-import { cacheTrackSource, getTrackSource } from '@/utils/db';
+import { trackUpdateNowPlaying, trackScrobble } from '@/api/lastfm';
 import { isCreateMpris, isCreateTray } from '@/utils/platform';
-import { Howl, Howler } from 'howler';
-import shuffle from 'lodash/shuffle';
-import { decode as base642Buffer } from '@/utils/base64';
 
 const PLAY_PAUSE_FADE_DURATION = 200;
 
@@ -35,14 +34,14 @@ function setTitle(track) {
     ? `${track.name} · ${track.ar[0].name} - DonnisPlayMusic`
     : 'DonnisPlayMusic';
   if (isCreateTray) {
-    ipcRenderer?.send('updateTrayTooltip', document.title);
+    ipcRenderer.send('updateTrayTooltip', document.title);
   }
   store.commit('updateTitle', document.title);
 }
 
 function setTrayLikeState(isLiked) {
   if (isCreateTray) {
-    ipcRenderer?.send('updateTrayLikeState', isLiked);
+    ipcRenderer.send('updateTrayLikeState', isLiked);
   }
 }
 
@@ -70,9 +69,7 @@ export default class {
     this._playNextList = []; // 当这个list不为空时，会优先播放这个list的歌
     this._isPersonalFM = false; // 是否是私人FM模式
     this._personalFMTrack = { id: 0 }; // 私人FM当前歌曲
-    this._personalFMNextTrack = {
-      id: 0,
-    }; // 私人FM下一首歌曲信息（为了快速加载下一首）
+    this._personalFMNextTrack = { id: 0 }; // 私人FM下一首歌曲信息（为了快速加载下一首）
 
     /**
      * The blob records for cleanup.
@@ -195,6 +192,8 @@ export default class {
 
   _init() {
     this._loadSelfFromLocalStorage();
+    Howler.autoUnlock = false;
+    Howler.usingWebAudio = true;
     Howler.volume(this.volume);
 
     if (this._enabled) {
@@ -223,19 +222,18 @@ export default class {
   _setPlaying(isPlaying) {
     this._playing = isPlaying;
     if (isCreateTray) {
-      ipcRenderer?.send('updateTrayPlayState', this._playing);
+      ipcRenderer.send('updateTrayPlayState', this._playing);
     }
   }
   _setIntervals() {
     // 同步播放进度
-    // TODO: 如果 _progress 在别的地方被改变了，
-    // 这个定时器会覆盖之前改变的值，是bug
+    // TODO: 如果 _progress 在别的地方被改变了，这个定时器会覆盖之前改变的值，是bug
     setInterval(() => {
       if (this._howler === null) return;
       this._progress = this._howler.seek();
       localStorage.setItem('playerCurrentTrackTime', this._progress);
       if (isCreateMpris) {
-        ipcRenderer?.send('playerCurrentTrackTime', this._progress);
+        ipcRenderer.send('playerCurrentTrackTime', this._progress);
       }
     }, 1000);
   }
@@ -315,7 +313,6 @@ export default class {
     this._howler = new Howl({
       src: [source],
       html5: true,
-      preload: true,
       format: ['mp3', 'flac'],
       onend: () => {
         this._nextTrackCallback();
@@ -330,27 +327,25 @@ export default class {
     }
     this.setOutputDevice();
   }
-  _getAudioSourceBlobURL(data) {
-    // Create a new object URL.
-    const source = URL.createObjectURL(new Blob([data]));
-
-    // Clean up the previous object URLs since we've created a new one.
-    // Revoke object URLs can release the memory taken by a Blob,
-    // which occupied a large proportion of memory.
-    for (const url in this.createdBlobRecords) {
-      URL.revokeObjectURL(url);
-    }
-
-    // Then, we replace the createBlobRecords with new one with
-    // our newly created object URL.
-    this.createdBlobRecords = [source];
-
-    return source;
-  }
   _getAudioSourceFromCache(id) {
     return getTrackSource(id).then(t => {
       if (!t) return null;
-      return this._getAudioSourceBlobURL(t.source);
+
+      // Create a new object URL.
+      const source = URL.createObjectURL(new Blob([t.source]));
+
+      // Clean up the previous object URLs since we've created a new one.
+      // Revoke object URLs can release the memory taken by a Blob,
+      // which occupied a large proportion of memory.
+      for (const url in this.createdBlobRecords) {
+        URL.revokeObjectURL(url);
+      }
+
+      // Then, we replace the createBlobRecords with new one with
+      // our newly created object URL.
+      this.createdBlobRecords = [source];
+
+      return source;
     });
   }
   _getAudioSourceFromNetease(track) {
@@ -373,72 +368,22 @@ export default class {
   }
   async _getAudioSourceFromUnblockMusic(track) {
     console.debug(`[debug][Player.js] _getAudioSourceFromUnblockMusic`);
-
     if (
       process.env.IS_ELECTRON !== true ||
       store.state.settings.enableUnblockNeteaseMusic === false
     ) {
       return null;
     }
-
-    /**
-     *
-     * @param {string=} searchMode
-     * @returns {import("@unblockneteasemusic/rust-napi").SearchMode}
-     */
-    const determineSearchMode = searchMode => {
-      /**
-       * FastFirst = 0
-       * OrderFirst = 1
-       */
-      switch (searchMode) {
-        case 'fast-first':
-          return 0;
-        case 'order-first':
-          return 1;
-        default:
-          return 0;
-      }
-    };
-
-    /** @type {import("@unblockneteasemusic/rust-napi").RetrievedSongInfo | null} */
-    const retrieveSongInfo = await ipcRenderer.invoke(
+    const source = await ipcRenderer.invoke(
       'unblock-music',
-      store.state.settings.unmSource,
       track,
-      /** @type {import("@unblockneteasemusic/rust-napi").Context} */ ({
-        enableFlac: store.state.settings.unmEnableFlac || null,
-        proxyUri: store.state.settings.unmProxyUri || null,
-        searchMode: determineSearchMode(store.state.settings.unmSearchMode),
-        config: {
-          'joox:cookie': store.state.settings.unmJooxCookie || null,
-          'qq:cookie': store.state.settings.unmQQCookie || null,
-          'ytdl:exe': store.state.settings.unmYtDlExe || null,
-        },
-      })
+      store.state.settings.unmSource
     );
-
-    if (store.state.settings.automaticallyCacheSongs && retrieveSongInfo?.url) {
-      // 对于来自 bilibili 的音源
-      // retrieveSongInfo.url 是音频数据的base64编码
-      // 其他音源为实际url
-      const url =
-        retrieveSongInfo.source === 'bilibili'
-          ? `data:application/octet-stream;base64,${retrieveSongInfo.url}`
-          : retrieveSongInfo.url;
-      cacheTrackSource(track, url, 128000, `unm:${retrieveSongInfo.source}`);
+    if (store.state.settings.automaticallyCacheSongs && source?.url) {
+      // TODO: 将unblockMusic字样换成真正的来源（比如酷我咪咕等）
+      cacheTrackSource(track, source.url, 128000, 'unblockMusic');
     }
-
-    if (!retrieveSongInfo) {
-      return null;
-    }
-
-    if (retrieveSongInfo.source !== 'bilibili') {
-      return retrieveSongInfo.url;
-    }
-
-    const buffer = base642Buffer(retrieveSongInfo.url);
-    return this._getAudioSourceBlobURL(buffer);
+    return source?.url;
   }
   _getAudioSource(track) {
     return this._getAudioSourceFromCache(String(track.id))
@@ -561,7 +506,7 @@ export default class {
 
     navigator.mediaSession.metadata = new window.MediaMetadata(metadata);
     if (isCreateMpris) {
-      ipcRenderer?.send('metadata', metadata);
+      ipcRenderer.send('metadata', metadata);
     }
   }
   _updateMediaSessionPositionState() {
@@ -617,7 +562,7 @@ export default class {
     }
     let copyTrack = { ...track };
     copyTrack.dt -= seekTime * 1000;
-    ipcRenderer?.send('playDiscordPresence', copyTrack);
+    ipcRenderer.send('playDiscordPresence', copyTrack);
   }
   _pauseDiscordPresence(track) {
     if (
@@ -626,7 +571,7 @@ export default class {
     ) {
       return null;
     }
-    ipcRenderer?.send('pauseDiscordPresence', track);
+    ipcRenderer.send('pauseDiscordPresence', track);
   }
 
   currentTrackID() {
@@ -867,7 +812,7 @@ export default class {
   sendSelfToIpcMain() {
     if (process.env.IS_ELECTRON !== true) return false;
     let liked = store.state.liked.songs.includes(this.currentTrack.id);
-    ipcRenderer?.send('player', {
+    ipcRenderer.send('player', {
       playing: this.playing,
       likedCurrentTrack: liked,
     });
@@ -883,13 +828,13 @@ export default class {
       this.repeatMode = 'on';
     }
     if (isCreateMpris) {
-      ipcRenderer?.send('switchRepeatMode', this.repeatMode);
+      ipcRenderer.send('switchRepeatMode', this.repeatMode);
     }
   }
   switchShuffle() {
     this.shuffle = !this.shuffle;
     if (isCreateMpris) {
-      ipcRenderer?.send('switchShuffle', this.shuffle);
+      ipcRenderer.send('switchShuffle', this.shuffle);
     }
   }
   switchReversed() {

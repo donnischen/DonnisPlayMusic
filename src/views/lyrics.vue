@@ -34,7 +34,7 @@
         <div>
           <div class="cover">
             <div class="cover-container">
-              <img :src="imageUrl" loading="lazy" />
+              <img :src="imageUrl" />
               <div
                 class="shadow"
                 :style="{ backgroundImage: `url(${imageUrl})` }"
@@ -192,18 +192,16 @@
               @click="clickLyricLine(line.time)"
               @dblclick="clickLyricLine(line.time, true)"
             >
-              <div class="content">
-                <span v-if="line.contents[0]">{{ line.contents[0] }}</span>
-                <br />
-                <span
-                  v-if="
-                    line.contents[1] &&
-                    $store.state.settings.showLyricsTranslation
-                  "
-                  class="translation"
-                  >{{ line.contents[1] }}</span
-                >
-              </div>
+              <span v-if="line.contents[0]">{{ line.contents[0] }}</span>
+              <br />
+              <span
+                v-if="
+                  line.contents[1] &&
+                  $store.state.settings.showLyricsTranslation
+                "
+                class="translation"
+                >{{ line.contents[1] }}</span
+              >
             </div>
           </div>
         </transition>
@@ -227,7 +225,7 @@ import { formatTrackTime } from '@/utils/common';
 import { getLyric } from '@/api/track';
 import { lyricParser } from '@/utils/lyrics';
 import ButtonIcon from '@/components/ButtonIcon.vue';
-import * as Vibrant from 'node-vibrant/dist/vibrant.worker.min.js';
+import * as Vibrant from 'node-vibrant';
 import Color from 'color';
 import { hasListSource, getListSourcePath } from '@/utils/playList';
 
@@ -433,13 +431,13 @@ export default {
     },
     getCoverColor() {
       if (this.settings.lyricsBackground !== true) return;
-      const cover = this.currentTrack.al?.picUrl + '?param=256y256';
+      const cover = this.currentTrack.al?.picUrl + '?param=1024y1024';
       Vibrant.from(cover, { colorCount: 1 })
         .getPalette()
         .then(palette => {
-          const originColor = Color.rgb(palette.DarkMuted._rgb);
-          const color = originColor.darken(0.1).rgb().string();
-          const color2 = originColor.lighten(0.28).rotate(-30).rgb().string();
+          const orignColor = Color.rgb(palette.DarkMuted._rgb);
+          const color = orignColor.darken(0.1).rgb().string();
+          const color2 = orignColor.lighten(0.28).rotate(-30).rgb().string();
           this.background = `linear-gradient(to top left, ${color}, ${color2})`;
         });
     },
@@ -699,23 +697,20 @@ export default {
       &:hover {
         background: var(--color-secondary-bg-for-transparent);
       }
-
-      .content {
-        transform-origin: center left;
+      &:active {
         transform: scale(0.95);
+      }
+
+      span {
+        opacity: 0.28;
+        cursor: default;
+        font-size: 1em;
         transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
 
-        span {
-          opacity: 0.28;
-          cursor: default;
-          font-size: 1em;
-          transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-
-        span.translation {
-          opacity: 0.2;
-          font-size: 0.925em;
-        }
+      span.translation {
+        opacity: 0.2;
+        font-size: 0.95em;
       }
     }
 
@@ -727,16 +722,15 @@ export default {
       margin-top: 0.1em;
     }
 
-    .highlight div.content {
-      transform: scale(1);
-      span {
-        opacity: 0.98;
-        display: inline-block;
-      }
+    .highlight span {
+      opacity: 0.98;
+      display: inline-block;
+      font-size: 1.25em;
+    }
 
-      span.translation {
-        opacity: 0.65;
-      }
+    .highlight span.translation {
+      opacity: 0.65;
+      font-size: 1.1em;
     }
   }
 

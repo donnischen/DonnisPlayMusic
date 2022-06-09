@@ -2,7 +2,7 @@
   <div v-show="show" class="artist-page">
     <div class="artist-info">
       <div class="head">
-        <img :src="artist.img1v1Url | resizeImage(1024)" loading="lazy" />
+        <img :src="artist.img1v1Url | resizeImage(1024)" />
       </div>
       <div>
         <div class="name">{{ artist.name }}</div>
@@ -75,7 +75,7 @@
             @mouseleave="mvHover = false"
             @click="goToMv(latestMV.id)"
           >
-            <img :src="latestMV.coverUrl" loading="lazy" />
+            <img :src="latestMV.coverUrl" />
             <transition name="fade">
               <div
                 v-show="mvHover"
@@ -127,7 +127,7 @@
     <div v-if="mvs.length !== 0" id="mvs" class="mvs">
       <div class="section-title"
         >MVs
-        <router-link v-show="hasMoreMV" :to="`/artist/${artist.id}/mv`">{{
+        <router-link v-show="hasMoreMV" :to="`/artist/${this.artist.id}/mv`">{{
           $t('home.seeMore')
         }}</router-link>
       </div>

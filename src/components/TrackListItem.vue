@@ -10,7 +10,6 @@
     <img
       v-if="!isAlbum"
       :src="imgUrl"
-      loading="lazy"
       :class="{ hover: focus }"
       @click="goToAlbum"
     />

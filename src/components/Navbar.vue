@@ -43,12 +43,7 @@
             </div>
           </div>
         </div>
-        <img
-          class="avatar"
-          :src="avatarUrl"
-          @click="showUserProfileMenu"
-          loading="lazy"
-        />
+        <img class="avatar" :src="avatarUrl" @click="showUserProfileMenu" />
       </div>
     </nav>
 

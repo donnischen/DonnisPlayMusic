@@ -22,10 +22,6 @@ export default {
     artists: [],
     mvs: [],
     cloudDisk: [],
-    playHistory: {
-      weekData: [],
-      allData: [],
-    },
   },
   contextMenu: {
     clickObjectID: 0,

@@ -2,10 +2,7 @@
   <div class="track-list">
     <ContextMenu ref="menu">
       <div v-show="type !== 'cloudDisk'" class="item-info">
-        <img
-          :src="rightClickedTrackComputed.al.picUrl | resizeImage(224)"
-          loading="lazy"
-        />
+        <img :src="rightClickedTrackComputed.al.picUrl | resizeImage(224)" />
         <div class="info">
           <div class="title">{{ rightClickedTrackComputed.name }}</div>
           <div class="subtitle">{{ rightClickedTrackComputed.ar[0].name }}</div>
@@ -78,6 +75,7 @@ import { mapActions, mapMutations, mapState } from 'vuex';
 import { addOrRemoveTrackFromPlaylist } from '@/api/playlist';
 import { cloudDiskTrackDelete } from '@/api/user';
 import { isAccountLoggedIn } from '@/utils/auth';
+const { clipboard } = require('electron');
 
 import TrackListItem from '@/components/TrackListItem.vue';
 import ContextMenu from '@/components/ContextMenu.vue';
@@ -272,7 +270,7 @@ export default {
       }
     },
     copyLink() {
-      navigator.clipboard.writeText(
+      clipboard.writeText(
         `https://music.163.com/song?id=${this.rightClickedTrack.id}`
       );
       this.showToast(locale.t('toast.copied'));
