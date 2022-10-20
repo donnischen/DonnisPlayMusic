@@ -7,7 +7,7 @@
   <p align="center">
     高颜值的第三方网易云播放器
     <br />
-    <a href="https://donnisplaymusic.vercel.app/" target="blank"><strong>🌎 访问官方网站</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;
+    <a href="https://donnisplaymusic.vercel.app/" target="blank"><strong>🌎 访问官方网站</strong></a>
     <br />
     <br />
   </p>
