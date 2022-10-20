@@ -7,7 +7,7 @@
   <p align="center">
     高颜值的第三方网易云播放器
     <br />
-    <a href="https://donnisplaymusic.vercel.app/" target="blank"><strong>🌎 访问官方网站</strong></a>
+    <a href="https://donnisplaymusic.vercel.app/" target="blank"><strong>🌎 访问官方网站</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;
     <br />
     <br />
   </p>
@@ -33,6 +33,7 @@
 
 ![home][home-screenshot]
 ![album][album-screenshot]
+![album-2][album-2-screenshot]
 ![home-2][home-2-screenshot]
 ![library][library-screenshot]
 ![artist][artist-screenshot]
@@ -44,6 +45,7 @@
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
 [album-screenshot]: images/album.png
+[album-2-screenshot]: images/album2.png
 [artist-screenshot]: images/artist.png
 [explore-screenshot]: images/explore.png
 [home-screenshot]: images/home.png
