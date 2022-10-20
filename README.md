@@ -7,11 +7,13 @@
   <p align="center">
     高颜值的第三方网易云播放器
     <br />
+    <a href="https://donnisplaymusic.vercel.app/" target="blank"><strong>🌎 访问官方网站</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;
     <br />
     <br />
   </p>
 </p>
 
+[![home][home-screenshot]](https://donnisplaymusic.vercel.app/)
 
 ## ✨ 特性
 
@@ -27,4 +29,25 @@
 - ☁️ 支持音乐云盘
 - ⌨️ 自定义快捷键和全局快捷键
 
+## 🖼️ 截图
 
+![home][home-screenshot]
+![album][album-screenshot]
+![home-2][home-2-screenshot]
+![library][library-screenshot]
+![artist][artist-screenshot]
+![search][search-screenshot]
+![search-2][search-2-screenshot]
+![explore][explore-screenshot]
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+
+[album-screenshot]: images/album.png
+[artist-screenshot]: images/artist.png
+[explore-screenshot]: images/explore.png
+[home-screenshot]: images/home.png
+[home-2-screenshot]: images/home-2.png
+[library-screenshot]: images/library.png
+[search-screenshot]: images/search.png
+[search-2-screenshot]: images/search2.png
