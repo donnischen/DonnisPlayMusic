@@ -230,7 +230,7 @@
             <div class="title"
               >{{ $t('settings.unm.enable') }}
               <a
-                href="https://github.com/UnblockNeteaseMusic/server"
+                href="https://donnisplaymusic.vercel.app/unblockneteasemusic.html"
                 target="blank"
                 >UnblockNeteaseMusic</a
               ></div
@@ -257,7 +257,7 @@
             <div class="description">
               音源的具体代号
               <a
-                href="https://github.com/UnblockNeteaseMusic/server-rust/blob/main/README.md#支援的所有引擎"
+                href="https://donnisplaymusic.vercel.app/supportedengines.html"
                 target="_blank"
               >
                 可以点此到 UNM 的说明页面查询 </a
@@ -307,69 +307,6 @@
                 {{ $t('settings.unm.searchMode.order') }}
               </option>
             </select>
-          </div>
-        </div>
-
-        <div class="item">
-          <div class="left">
-            <div class="title">{{ $t('settings.unm.cookie.joox') }}</div>
-            <div class="description">
-              <a
-                href="https://github.com/UnblockNeteaseMusic/server-rust/tree/main/engines#joox-cookie-設定說明"
-                target="_blank"
-                >{{ $t('settings.unm.cookie.desc1') }}
-              </a>
-              {{ $t('settings.unm.cookie.desc2') }}
-            </div>
-          </div>
-          <div class="right">
-            <input
-              v-model="unmJooxCookie"
-              class="text-input margin-right-0"
-              placeholder="wmid=..; session_key=.."
-            />
-          </div>
-        </div>
-
-        <div class="item">
-          <div class="left">
-            <div class="title"> {{ $t('settings.unm.cookie.qq') }} </div>
-            <div class="description">
-              <a
-                href="https://github.com/UnblockNeteaseMusic/server-rust/tree/main/engines#qq-cookie-設定說明"
-                target="_blank"
-                >{{ $t('settings.unm.cookie.desc1') }}
-              </a>
-              {{ $t('settings.unm.cookie.desc2') }}
-            </div>
-          </div>
-          <div class="right">
-            <input
-              v-model="unmQQCookie"
-              class="text-input margin-right-0"
-              placeholder="uin=..; qm_keyst=..;"
-            />
-          </div>
-        </div>
-
-        <div class="item">
-          <div class="left">
-            <div class="title"> {{ $t('settings.unm.ytdl') }} </div>
-            <div class="description">
-              <a
-                href="https://github.com/UnblockNeteaseMusic/server-rust/tree/main/engines#ytdlexe-設定說明"
-                target="_blank"
-                >{{ $t('settings.unm.cookie.desc1') }}
-              </a>
-              {{ $t('settings.unm.cookie.desc2') }}
-            </div>
-          </div>
-          <div class="right">
-            <input
-              v-model="unmYtDlExe"
-              class="text-input margin-right-0"
-              placeholder="ex. youtube-dl"
-            />
           </div>
         </div>
 
