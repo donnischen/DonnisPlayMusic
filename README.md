@@ -15,6 +15,10 @@
 
 [![home][home-screenshot]](https://donnisplaymusic.vercel.app/)
 
+
+## 仅维护
+当前版本将进入维护模式，只修复重大Bug，不会再更新新功能
+
 ## ✨ 特性
 
 - ✅ 使用 Vue.js 全家桶开发
